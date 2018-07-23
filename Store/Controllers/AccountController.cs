@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Store.Models;
@@ -151,17 +152,22 @@ namespace Store.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>());
+                var roleadmin = new IdentityRole { Name = "Admin" };
+                var roleuser = new IdentityRole { Name = "User" };
+                await roleManager.CreateAsync(roleadmin);
+                await roleManager.CreateAsync(roleuser);
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, PhoneNumber = model.PhoneNumber };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                var result2 = await UserManager.AddToRoleAsync(user.Id, roleuser.Name);
+                if (result.Succeeded && result2.Succeeded && result2.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                 
-                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                     await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
-
-                    return View("DisplayEmail");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Подтверждение электронной почты☺",
+                    "Для завершения регистрации ☻перейдите по ссылке:: <a href=\"" + callbackUrl + "\">завершить регистрацию</a>");
+                    return View("DisplayEmailik");
                 }
                 AddErrors(result);
             }

@@ -79,6 +79,11 @@ namespace Store.Models
         [Display(Name = "Подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Телефон")]
+        public string PhoneNumber { get; set; }
+
     }
 
     public class ResetPasswordViewModel
