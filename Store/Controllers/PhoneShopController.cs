@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PagedList;
+using System.Threading.Tasks;
 
 namespace Store.Controllers
 {
@@ -13,7 +14,7 @@ namespace Store.Controllers
     {
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult Add()
+        public async Task<ActionResult> Add()
         {
             return View();
 
@@ -21,34 +22,34 @@ namespace Store.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(PhoneItem phoneItem)
+        public async Task<ActionResult> Add(PhoneItem phoneItem)
         {
-            PhoneItemManager.AddPhone(phoneItem);
+           await PhoneItemManager.AddPhoneAsync(phoneItem);
             var results = PhoneItemManager.GetPhones();
             return View("../Phone/AddResult");
         }
         [HttpGet]
         [Authorize(Roles = "Admin")]
         [HandleError(ExceptionType = typeof(ArgumentNullException), View = "ExceptionFound")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            var onephone = PhoneItemManager.Get(id);
+            var onephone = await PhoneItemManager.GetAsync(id);
             if (onephone != null)
             {
                 return View(onephone);
             }
             else
             {
-                var resultlist = PhoneItemManager.GetPhones();
+                var resultlist = await PhoneItemManager.GetPhonesAsync();
                 var result = resultlist.ToPagedList(1, 3);
                 return View(result);
             }
         }
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(Guid id)
+        public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            var onephone = PhoneItemManager.Get(id);
+            var onephone = await PhoneItemManager.GetAsync(id);
             if (onephone == null)
             {
                 return RedirectToRoute(new { controller = "Home", action = "Index" });

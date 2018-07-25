@@ -83,7 +83,7 @@ namespace Store.DataBaseManager
                 db.SaveChanges();
             }
         }
-        public static async Task<bool> AddInstrumentAsync(PhoneItem phoneItem)
+        public static async Task<bool> AddPhoneAsync(PhoneItem phoneItem)
         {
             if (phoneItem != null)
             {
