@@ -196,9 +196,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PhoneShopController.cs" />
+    <Compile Include="DataBaseManager\CartManager.cs" />
     <Compile Include="DataBaseManager\DataBaseContext.cs" />
     <Compile Include="DataBaseManager\Initializer.cs" />
     <Compile Include="DataBaseManager\PhoneItemManager.cs" />
@@ -206,6 +208,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CartLine.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PhoneItem.cs" />
@@ -274,6 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Cart\" />
     <Folder Include="Views\PhoneShop\" />
   </ItemGroup>
   <ItemGroup>
