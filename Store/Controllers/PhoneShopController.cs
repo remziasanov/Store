@@ -14,7 +14,7 @@ namespace Store.Controllers
     {
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Add()
+        public ActionResult Add()
         {
             return View();
 
@@ -56,15 +56,15 @@ namespace Store.Controllers
             }
             else
             {
-                PhoneItemManager.DeletePhone(id);
+                await PhoneItemManager.DeletePhoneAsync(id);
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
         }
         [HttpGet]
         [HandleError(ExceptionType = typeof(ArgumentException), Master = "Index")]
-        public ActionResult Details(Guid id)
+        public async Task<ActionResult> Details(Guid id)
         {
-            var result = PhoneItemManager.Get(id);
+            var result = await PhoneItemManager.GetAsync(id);
             if (result == null)
             {
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
@@ -76,9 +76,9 @@ namespace Store.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit(Guid id)
+        public async Task<ActionResult> Edit(Guid id)
         {
-            var result = PhoneItemManager.Get(id);
+            var result = await PhoneItemManager.GetAsync(id);
             if (result == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -90,9 +90,9 @@ namespace Store.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit(PhoneItem phoneItem)
+        public async Task<ActionResult> Edit(PhoneItem phoneItem)
         {
-            PhoneItemManager.EditPhone(phoneItem);
+            await PhoneItemManager.EditPhoneAsync(phoneItem);
             //var result = InstrumentManager.GetInstruments();
             return RedirectToAction("../Home/Index");
         }
